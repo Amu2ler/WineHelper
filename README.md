@@ -1,69 +1,33 @@
-# WineHelper 🍷
+# 🍷 WineHelper
 
-WineHelper est une application qui aide à la gestion et à la découverte des vins.
+Une application web moderne permettant d’explorer des vins, rechercher par nom, et obtenir des informations détaillées grâce à l’API _Wine Explorer (RapidAPI)_.
 
-## Structure du Projet
+WineHelper se compose de deux parties :
 
-Le projet est divisé en deux parties principales :
+**Frontend (Next.js + React + TypeScript)**  
+ **Backend (Node.js + Express + Axios)**
 
-- `backend/` : Le serveur back-end de l'application
-- `frontend/` : L'interface utilisateur de l'application
+L’objectif final est de créer un véritable **assistant vin** basé sur :
 
-## Technologies Utilisées
+- la recherche,
+- les détails de vins,
+- l’affichage visuel,
+- et plus tard : un moteur de recommandation intelligent.
 
-### Backend
-
-- Technologies utilisées pour le backend
-
-### Frontend
-
-- Technologies utilisées pour le frontend
-
-## Installation
-
-1. Cloner le repository
-
-```bash
-git clone https://github.com/Amu2ler/WineHelper.git
-cd WineHelper
-```
-
-2. Installation des dépendances
-
-```bash
-# Backend
-cd backend
-# Instructions d'installation du backend
-
-# Frontend
-cd frontend
-# Instructions d'installation du frontend
-```
-
-## Démarrage
+## Fonctionnalités actuelles
 
 ### Backend
 
-```bash
-cd backend
-# Instructions de démarrage du backend
-```
+- Route `/api/wines/search?q=nom`  
+  → Recherche de vins via l’API Wine Explorer  
+  → Transforme les résultats (nom + id)
+
+- Route `/api/wines/details/:id`  
+  → Récupère les informations détaillées d’un vin
 
 ### Frontend
 
-```bash
-cd frontend
-# Instructions de démarrage du frontend
-```
-
-## Fonctionnalités
-
-- Liste des fonctionnalités principales de l'application
-
-## Contribution
-
-Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou une pull request.
-
-## Licence
-
-[MIT](LICENSE)
+- Page `/search`
+- Champ de recherche + bouton "Rechercher"
+- Appel au backend
+- Affichage d’une liste de vins formatée (nom + bouton détails)
