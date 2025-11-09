@@ -4,9 +4,32 @@
 
 import { useState } from "react";
 
+type WineResult = {
+	id: number | string;
+	name: string;
+	[key: string]: unknown;
+};
+
+type SearchResponse = {
+	wines?: unknown;
+};
+
+const isWineResultArray = (value: unknown): value is WineResult[] =>
+	Array.isArray(value) &&
+	value.every((item) => {
+		if (typeof item !== "object" || item === null) {
+			return false;
+		}
+
+		const candidate = item as { id?: unknown; name?: unknown };
+		const hasValidId = typeof candidate.id === "string" || typeof candidate.id === "number" || typeof candidate?.id === "undefined";
+
+		return hasValidId && typeof candidate.name === "string";
+	});
+
 export default function SearchPage() {
 	const [query, setQuery] = useState("");
-	const [results, setResults] = useState<any[]>([]);
+	const [results, setResults] = useState<WineResult[]>([]);
 	const [loading, setLoading] = useState(false);
 
 	async function handleSearch() {
@@ -17,9 +40,9 @@ export default function SearchPage() {
 
 		try {
 			const res = await fetch(`http://localhost:4000/api/wines/search?q=${query}`);
-			const data = await res.json();
-
-			setResults(data?.wines || []);
+			const data: SearchResponse = await res.json();
+			const wines = isWineResultArray(data?.wines) ? data.wines : [];
+			setResults(wines);
 		} catch (err) {
 			console.error("Erreur recherche vin:", err);
 		}
@@ -63,7 +86,7 @@ export default function SearchPage() {
 					<h2 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>Résultats : {results.length} vins trouvés</h2>
 
 					<ul style={{ listStyle: "none", padding: 0 }}>
-						{results.map((wine: any) => (
+						{results.map((wine) => (
 							<li
 								key={wine.id}
 								style={{
