@@ -4,8 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { formatBottleSize, formatLocation, formatPrice, formatRating, formatVintage } from "../../utils";
-import { useFavorites } from "../../hooks/useFavorites";
+import { formatBottleSize, formatLocation, formatPrice, formatRating, formatVintage } from "../../../utils";
+import { useFavorites } from "../../../hooks/useFavorites";
 
 // Define strict types for the wine details
 interface WineDetails {
