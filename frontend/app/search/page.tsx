@@ -8,6 +8,7 @@ import { FormEvent, useMemo, useState } from "react";
 import type { SearchResponse, WineResult } from "../../types";
 import { formatBottleSize, formatLocation, formatPrice, formatRating, formatVintage } from "../../utils";
 import { useFavorites } from "../../hooks/useFavorites";
+import { getWineImage } from "../../utils/wineImages";
 
 const featuredSuggestions = ["Bordeaux", "Pinot noir", "Champagne", "Chianti", "Riesling"];
 
@@ -181,9 +182,9 @@ export default function SearchPage() {
 												</svg>
 											</button>
 											<div className="relative aspect-3/4 overflow-hidden bg-zinc-100">
-												{wine.imageUrl ? (
+												{getWineImage(wine) ? (
 													<Image
-														src={wine.imageUrl}
+														src={getWineImage(wine)!}
 														alt={wine.name}
 														fill
 														sizes="(max-width: 1024px) 100vw, 33vw"

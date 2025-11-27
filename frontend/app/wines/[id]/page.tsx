@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { formatBottleSize, formatLocation, formatPrice, formatRating, formatVintage } from "../../../utils";
 import { useFavorites } from "../../../hooks/useFavorites";
+import { getWineImage } from "../../../utils/wineImages";
 
 // Define strict types for the wine details
 interface WineDetails {
@@ -115,9 +116,9 @@ export default function WineDetailsPage() {
 				<div className="grid gap-12 lg:grid-cols-[1fr,1.2fr]">
 					{/* Image Section */}
 					<div className="relative aspect-3/4 overflow-hidden rounded-sm bg-zinc-50 shadow-xl shadow-zinc-200 lg:sticky lg:top-24 lg:h-[calc(100vh-8rem)]">
-						{wine.imageUrl ? (
+						{getWineImage(wine) ? (
 							<Image
-								src={wine.imageUrl}
+								src={getWineImage(wine)!}
 								alt={wine.name}
 								fill
 								className="object-contain p-8 transition duration-700 hover:scale-105"

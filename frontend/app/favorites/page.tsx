@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useFavorites } from "../../hooks/useFavorites";
 import { formatBottleSize, formatLocation, formatPrice, formatRating, formatVintage } from "../../utils";
+import { getWineImage } from "../../utils/wineImages";
 
 export default function FavoritesPage() {
 	const { favorites, removeFavorite, isLoaded } = useFavorites();
@@ -58,9 +59,9 @@ export default function FavoritesPage() {
 										</button>
 
 										<div className="relative aspect-3/4 overflow-hidden bg-zinc-100">
-											{wine.imageUrl ? (
+											{getWineImage(wine) ? (
 												<Image
-													src={wine.imageUrl}
+													src={getWineImage(wine)!}
 													alt={wine.name}
 													fill
 													sizes="(max-width: 1024px) 100vw, 33vw"
