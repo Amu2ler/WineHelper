@@ -14,7 +14,7 @@ export const manualWineImages: Record<string, string> = {
 /**
  * Récupère l'image d'un vin en priorisant le mapping manuel, puis l'image de l'API.
  */
-export const getWineImage = (wine: { id?: string | number; name?: string; imageUrl?: string }): string | null => {
+export const getWineImage = (wine: { id?: string | number; name?: string; imageUrl?: string | null }): string | null => {
     if (!wine) return null;
 
     const id = String(wine.id);
