@@ -1,33 +1,94 @@
 # 🍷 WineHelper
 
-Une application web moderne permettant d’explorer des vins, rechercher par nom, et obtenir des informations détaillées grâce à l’API _Wine Explorer (RapidAPI)_.
+**WineHelper** est votre assistant personnel pour l'exploration œnologique. Cette application web moderne permet de rechercher des vins, de consulter leurs détails techniques (cépages, millésimes, accords mets-vins) et de gérer vos favoris.
 
-WineHelper se compose de deux parties :
+Elle s'appuie sur l'API **Wine Explorer** pour fournir des données riches et précises.
 
-**Frontend (Next.js + React + TypeScript)**  
- **Backend (Node.js + Express + Axios)**
+---
 
-L’objectif final est de créer un véritable **assistant vin** basé sur :
+## 🚀 Fonctionnalités
 
-- la recherche,
-- les détails de vins,
-- l’affichage visuel,
-- et plus tard : un moteur de recommandation intelligent.
+- **Recherche Intelligente** : Trouvez des vins par nom, appellation ou région.
+- **Détails Complets** : Accédez à la fiche technique de chaque vin (prix, notes, description, millésime).
+- **Gestion des Favoris** : Sauvegardez vos vins préférés pour les retrouver facilement (stockage local).
+- **Galerie Visuelle** : Visualisez les bouteilles et étiquettes (avec support pour ajouts manuels).
+- **Interface Premium** : Une expérience utilisateur fluide et esthétique.
 
-## Fonctionnalités actuelles
+## 🛠️ Stack Technique
 
-### Backend
+**Frontend**
+- **Framework** : [Next.js 15](https://nextjs.org/) (App Router)
+- **Langage** : TypeScript
+- **Styling** : CSS Modules / Global CSS (Design responsive et moderne)
 
-- Route `/api/wines/search?q=nom`  
-  → Recherche de vins via l’API Wine Explorer  
-  → Transforme les résultats (nom + id)
+**Backend**
+- **Runtime** : Node.js
+- **Framework** : Express.js
+- **Client HTTP** : Axios
+- **API** : [Wine Explorer API](https://rapidapi.com/azgtamir/api/wine-explorer-api-ratings-insights-and-search/)
 
-- Route `/api/wines/details/:id`  
-  → Récupère les informations détaillées d’un vin
+---
 
-### Frontend
+## 📦 Installation et Démarrage
 
-- Page `/search`
-- Champ de recherche + bouton "Rechercher"
-- Appel au backend
-- Affichage d’une liste de vins formatée (nom + bouton détails)
+### Prérequis
+- Node.js (v18+ recommandé)
+- npm ou yarn
+- Une clé API RapidAPI pour *Wine Explorer*
+
+### 1. Cloner le projet
+```bash
+git clone https://github.com/votre-username/winehelper.git
+cd winehelper
+```
+
+### 2. Configuration du Backend
+```bash
+cd backend
+npm install
+```
+Créez un fichier `.env` dans le dossier `backend` :
+```env
+WINE_API_KEY=votre_cle_rapidapi
+WINE_SEARCH_LIMIT=10
+```
+Lancez le serveur :
+```bash
+npm start
+# Le serveur tourne sur http://localhost:4000
+```
+
+### 3. Configuration du Frontend
+Ouvrez un nouveau terminal à la racine du projet :
+```bash
+cd frontend
+npm install
+npm run dev
+# L'application est accessible sur http://localhost:3000
+```
+
+---
+
+## 📖 Utilisation
+
+1.  **Accueil** : Utilisez la barre de recherche pour trouver un vin (ex: "Chablis", "Merlot").
+2.  **Résultats** : Parcourez la liste des vins trouvés.
+3.  **Détails** : Cliquez sur "Voir les détails" pour afficher la fiche complète.
+4.  **Favoris** : Ajoutez un vin à vos favoris en cliquant sur le cœur ❤️.
+
+---
+
+## 🤝 Contribution
+
+Les contributions sont les bienvenues !
+1.  Forkez le projet.
+2.  Créez votre branche (`git checkout -b feat/ma-nouvelle-feature`).
+3.  Commitez vos changements (`git commit -m 'feat: ajout de ma feature'`).
+4.  Poussez vers la branche (`git push origin feat/ma-nouvelle-feature`).
+5.  Ouvrez une Pull Request.
+
+---
+
+## 📝 Licence
+
+Distribué sous la licence MIT. Voir `LICENSE` pour plus d'informations.
