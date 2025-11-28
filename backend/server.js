@@ -172,60 +172,89 @@ const fetchWineDetails = async (wineId) => {
 
 app.get("/api/wines/search", async (req, res) => {
 	const query = req.query.q || "syrah";
+	console.log(`[Search] Searching for: ${query}`);
 
 	try {
 		const response = await axios.get(`https://${WINE_API_HOST}/search`, {
-			params: {
-				wine_name: query,
-			},
+			params: { wine_name: query },
 			headers: {
 				"x-rapidapi-key": process.env.WINE_API_KEY,
 				"x-rapidapi-host": WINE_API_HOST,
 			},
 		});
 
+		console.log("[Search] Raw API Response status:", response.status);
+		// console.log("[Search] Raw API Response data:", JSON.stringify(response.data, null, 2)); // Uncomment for deep debug
+
 		const items = Array.isArray(response.data?.items) ? response.data.items : [];
+		console.log(`[Search] Found ${items.length} items.`);
+
 		const limit = Number.isFinite(DEFAULT_SEARCH_LIMIT) && DEFAULT_SEARCH_LIMIT > 0 ? DEFAULT_SEARCH_LIMIT : 6;
 		const slicedItems = items.slice(0, limit);
 
 		const wines = await Promise.all(
-			slicedItems.map(async (item) => {
-				const entry = item && typeof item === "object" ? Object.entries(item)[0] : undefined;
-				const rawName = Array.isArray(entry) ? entry[0] : undefined;
-				const rawId = Array.isArray(entry) ? entry[1] : undefined;
-				const name = typeof rawName === "string" && rawName.trim() ? rawName.trim() : "Vin sans nom";
-				const id = rawId ?? null;
+			slicedItems.map(async (item, index) => {
+				// The API seems to return items where the key is the name and value is the ID, OR just an object.
+				// Let's try to be more robust.
+				let name = "Vin sans nom";
+				let id = null;
+
+				if (item && typeof item === "object") {
+					// Case 1: { "Wine Name": "Wine ID" }
+					const entries = Object.entries(item);
+					if (entries.length > 0) {
+						name = entries[0][0];
+						id = entries[0][1];
+					}
+					
+					// Case 2: { name: "...", id: "..." } (Hypothetical, but good to handle)
+					if (item.name) name = item.name;
+					if (item.id) id = item.id;
+                    if (item.wine_id) id = item.wine_id;
+				}
+
+                name = typeof name === "string" ? name.trim() : "Vin sans nom";
 
 				if (!id) {
+					console.warn(`[Search] Item ${index} has no ID. Skipping details fetch. Name: ${name}`);
 					return { name };
 				}
+
+				console.log(`[Search] Fetching details for ID: ${id} (${name})`);
 
 				try {
 					const detailPayload = await fetchWineDetails(id);
 					return normalizeWineDetails(detailPayload, { id, name });
 				} catch (error) {
-					console.error(`Erreur API Wine Info pour ${id}:`, error.response?.data || error.message);
-					return { id, name };
+					console.error(`[Search] Error fetching details for ${id}:`, error.message);
+					return { id, name, error: "Details fetch failed" };
 				}
 			})
 		);
 
 		res.json({ wines });
 	} catch (error) {
-		console.error("Erreur API vin:", error.response?.data || error.message);
+		console.error("[Search] Global error:", error.message);
+        if (error.response) {
+            console.error("[Search] API Error Data:", error.response.data);
+        }
 		res.status(500).json({ error: "Erreur lors de la recherche" });
 	}
 });
 
 app.get("/api/wines/details/:id", async (req, res) => {
 	const wineId = req.params.id;
+	console.log(`[Details] Fetching details for ID: ${wineId}`);
 
 	try {
 		const detailPayload = await fetchWineDetails(wineId);
 		const normalized = normalizeWineDetails(detailPayload, { id: wineId });
 		res.json(normalized);
 	} catch (error) {
-		console.error("Erreur API Wine Info:", error.response?.data || error.message);
+		console.error(`[Details] Error for ${wineId}:`, error.message);
+        if (error.response) {
+            console.error("[Details] API Error Data:", error.response.data);
+        }
 		res.status(500).json({ error: "Impossible de récupérer les infos du vin" });
 	}
 });
