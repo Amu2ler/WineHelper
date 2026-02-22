@@ -30,7 +30,7 @@ export default function SearchPage() {
 	const [results, setResults] = useState<WineResult[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const { toggleFavorite, isFavorite } = useFavorites();
+	const { toggleFavorite, isFavorite, isLoaded: favoritesLoaded } = useFavorites();
 
 	const formattedResultCount = useMemo(() => {
 		if (results.length === 0) return null;
@@ -164,15 +164,15 @@ export default function SearchPage() {
 											<button
 												onClick={() => toggleFavorite(wine)}
 												className="absolute right-2 top-2 z-10 rounded-full bg-white/80 p-2 text-wine-900 shadow-sm hover:bg-white transition-colors"
-												title={isFavorite(wine.id!) ? "Retirer des favoris" : "Ajouter aux favoris"}
+												title={favoritesLoaded && wine.id != null && isFavorite(wine.id) ? "Retirer des favoris" : "Ajouter aux favoris"}
 											>
 												<svg
 													xmlns="http://www.w3.org/2000/svg"
 													viewBox="0 0 24 24"
-													fill={isFavorite(wine.id!) ? "currentColor" : "none"}
+													fill={favoritesLoaded && wine.id != null && isFavorite(wine.id) ? "currentColor" : "none"}
 													stroke="currentColor"
 													strokeWidth="1.5"
-													className={`w-5 h-5 ${isFavorite(wine.id!) ? "text-red-600" : "text-zinc-400"}`}
+													className={`w-5 h-5 ${favoritesLoaded && wine.id != null && isFavorite(wine.id) ? "text-red-600" : "text-zinc-400"}`}
 												>
 													<path
 														strokeLinecap="round"

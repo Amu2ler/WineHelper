@@ -5,6 +5,7 @@ import express from "express";
 import dotenv from "dotenv";
 import axios from "axios";
 import cors from "cors";
+import { searchMockWines, getMockWineById } from "./mockData.js";
 
 const app = express();
 app.use(cors());
@@ -14,6 +15,7 @@ dotenv.config();
 
 const WINE_API_HOST = "wine-explorer-api-ratings-insights-and-search.p.rapidapi.com";
 const DEFAULT_SEARCH_LIMIT = Number.parseInt(process.env.WINE_SEARCH_LIMIT ?? "6", 10);
+const USE_MOCK_DATA = process.env.USE_MOCK_DATA === "true";
 
 const firstNonEmpty = (...values) => values.find((value) => value !== undefined && value !== null && value !== "");
 
@@ -173,6 +175,15 @@ app.get("/api/wines/search", async (req, res) => {
 	const query = req.query.q || "syrah";
 	console.log(`[Search] Searching for: ${query}`);
 
+	// Mock mode: return mock data immediately
+	if (USE_MOCK_DATA) {
+		console.log("[Search] 🎭 Mock mode enabled - using mock data");
+		const limit = Number.isFinite(DEFAULT_SEARCH_LIMIT) && DEFAULT_SEARCH_LIMIT > 0 ? DEFAULT_SEARCH_LIMIT : 6;
+		const wines = searchMockWines(query, limit);
+		console.log(`[Search] Returning ${wines.length} mock wines`);
+		return res.json({ wines });
+	}
+
 	try {
 		const response = await axios.get(`https://${WINE_API_HOST}/search`, {
 			params: { wine_name: query },
@@ -244,6 +255,19 @@ app.get("/api/wines/search", async (req, res) => {
 app.get("/api/wines/details/:id", async (req, res) => {
 	const wineId = req.params.id;
 	console.log(`[Details] Fetching details for ID: ${wineId}`);
+
+	// Mock mode: return mock data immediately
+	if (USE_MOCK_DATA) {
+		console.log("[Details] 🎭 Mock mode enabled - using mock data");
+		const wine = getMockWineById(wineId);
+		if (wine) {
+			console.log(`[Details] Found mock wine: ${wine.name}`);
+			return res.json(wine);
+		} else {
+			console.warn(`[Details] Mock wine not found for ID: ${wineId}`);
+			return res.status(404).json({ error: "Vin non trouvé" });
+		}
+	}
 
 	try {
 		const detailPayload = await fetchWineDetails(wineId);

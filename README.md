@@ -12,6 +12,7 @@ Elle s'appuie sur l'API **Wine Explorer** pour fournir des données riches et pr
 - **Détails Complets** : Accédez à la fiche technique de chaque vin (prix, notes, description, millésime).
 - **Gestion des Favoris** : Sauvegardez vos vins préférés pour les retrouver facilement (stockage local).
 - **Galerie Visuelle** : Visualisez les bouteilles et étiquettes (avec support pour ajouts manuels).
+- **Mode Mock** : Testez l'application avec des données réalistes sans consommer de requêtes API.
 - **Interface Premium** : Une expérience utilisateur fluide et esthétique.
 
 ## 🛠️ Stack Technique
@@ -51,7 +52,19 @@ Créez un fichier `.env` dans le dossier `backend` :
 ```env
 WINE_API_KEY=votre_cle_rapidapi
 WINE_SEARCH_LIMIT=10
+USE_MOCK_DATA=false
 ```
+
+**Mode Mock (Recommandé pour le développement)** :
+Pour éviter de consommer vos crédits API, activez le mode mock :
+```env
+USE_MOCK_DATA=true
+```
+Ce mode utilise 18 vins français réalistes (Bordeaux, Bourgogne, Champagne, etc.) avec toutes les données complètes. Idéal pour :
+- ✅ Tester les fonctionnalités sans limite
+- ✅ Développement hors ligne
+- ✅ Démonstration de l'application
+
 Lancez le serveur :
 ```bash
 npm start

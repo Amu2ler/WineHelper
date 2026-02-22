@@ -47,7 +47,7 @@ export const formatRating = (rating?: WineResult["rating"], ratingCount?: number
 		return null;
 	}
 
-	const base = `${numeric.toFixed(1)}/5`;
+	const base = `${numeric.toFixed(0)}/100`;
 
 	if (typeof ratingCount === "number" && ratingCount > 0) {
 		return `${base} · ${ratingCount} avis`;

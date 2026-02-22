@@ -39,8 +39,9 @@ export function useFavorites() {
 	};
 
 	const toggleFavorite = (wine: WineResult) => {
-		if (isFavorite(wine.id!)) {
-			removeFavorite(wine.id!);
+		if (wine.id == null) return;
+		if (isFavorite(wine.id)) {
+			removeFavorite(wine.id);
 		} else {
 			addFavorite(wine);
 		}

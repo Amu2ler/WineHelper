@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { formatBottleSize, formatLocation, formatPrice, formatRating, formatVintage } from "../../../utils";
+import { formatLocation, formatPrice, formatRating, formatVintage } from "../../../utils";
 import { useFavorites } from "../../../hooks/useFavorites";
 import { getWineImage } from "../../../utils/wineImages";
 
@@ -21,12 +21,12 @@ interface WineDetails {
 		currency?: string;
 		display?: string;
 	};
-	vintage?: string;
+	vintage?: string | number;
 	releaseDate?: string;
 	grapes?: string[];
 	alcohol?: string | number;
 	foodPairings?: string[];
-	rating?: number;
+	rating?: number | string | null;
 	ratingCount?: number;
 	classification?: string;
 	country?: string;
@@ -42,7 +42,7 @@ export default function WineDetailsPage() {
 	const [wine, setWine] = useState<WineDetails | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const { toggleFavorite, isFavorite } = useFavorites();
+	const { toggleFavorite, isFavorite, isLoaded: favoritesLoaded } = useFavorites();
 
 	useEffect(() => {
 		if (!id) return;
@@ -96,6 +96,7 @@ export default function WineDetailsPage() {
 	const priceDisplay = formatPrice(wine.price);
 	const ratingDisplay = formatRating(wine.rating, wine.ratingCount);
 	const vintageLabel = formatVintage(wine);
+	const wineImage = getWineImage(wine);
 
 	return (
 		<div className="min-h-screen bg-background text-foreground">
@@ -116,9 +117,9 @@ export default function WineDetailsPage() {
 				<div className="grid gap-12 lg:grid-cols-[1fr,1.2fr]">
 					{/* Image Section */}
 					<div className="relative aspect-3/4 overflow-hidden rounded-sm bg-zinc-50 shadow-xl shadow-zinc-200 lg:sticky lg:top-24 lg:h-[calc(100vh-8rem)]">
-						{getWineImage(wine) ? (
+						{wineImage ? (
 							<Image
-								src={getWineImage(wine)!}
+								src={wineImage!}
 								alt={wine.name}
 								fill
 								className="object-contain p-8 transition duration-700 hover:scale-105"
@@ -150,17 +151,17 @@ export default function WineDetailsPage() {
 									{wine.name}
 								</h1>
 								<button
-									onClick={() => toggleFavorite(wine as any)} // Cast needed because WineDetails vs WineResult types might differ slightly, but id/name match
+									onClick={() => toggleFavorite(wine)}
 									className="rounded-full bg-zinc-50 p-3 text-wine-900 transition-colors hover:bg-wine-100"
-									title={isFavorite(wine.id) ? "Retirer des favoris" : "Ajouter aux favoris"}
+									title={favoritesLoaded && isFavorite(wine.id) ? "Retirer des favoris" : "Ajouter aux favoris"}
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										viewBox="0 0 24 24"
-										fill={isFavorite(wine.id) ? "currentColor" : "none"}
+										fill={favoritesLoaded && isFavorite(wine.id) ? "currentColor" : "none"}
 										stroke="currentColor"
 										strokeWidth="1.5"
-										className={`w-6 h-6 ${isFavorite(wine.id) ? "text-red-600" : "text-zinc-400"}`}
+										className={`w-6 h-6 ${favoritesLoaded && isFavorite(wine.id) ? "text-red-600" : "text-zinc-400"}`}
 									>
 										<path
 											strokeLinecap="round"

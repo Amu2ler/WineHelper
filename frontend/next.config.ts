@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "dl.dropboxusercontent.com", // Sometimes used in APIs
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com", // For mock data images
+      },
     ],
   },
 };

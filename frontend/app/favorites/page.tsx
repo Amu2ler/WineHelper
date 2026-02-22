@@ -49,7 +49,7 @@ export default function FavoritesPage() {
 										className="group flex h-full flex-col bg-white shadow-sm transition-shadow hover:shadow-xl relative"
 									>
 										<button
-											onClick={() => removeFavorite(wine.id!)}
+											onClick={() => wine.id != null && removeFavorite(wine.id)}
 											className="absolute right-2 top-2 z-10 rounded-full bg-white/80 p-2 text-wine-900 shadow-sm hover:bg-white hover:text-red-600 transition-colors"
 											title="Retirer des favoris"
 										>
