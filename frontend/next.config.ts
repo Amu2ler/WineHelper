@@ -19,6 +19,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com", // For mock data images
       },
+      {
+        protocol: "https",
+        hostname: "**", // Custom wine images (any domain)
+      },
+      {
+        protocol: "http",
+        hostname: "**", // Custom wine images (any domain, http)
+      },
     ],
   },
 };

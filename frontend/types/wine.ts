@@ -25,6 +25,7 @@ export type WineResult = {
 	region?: string;
 	subregion?: string;
 	appellation?: string;
+	source?: "api" | "custom";
 };
 
 export type SearchResponse = {
